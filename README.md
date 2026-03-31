@@ -18,4 +18,4 @@ DevDock es una biblioteca web de herramientas para desarrolladores que combina c
 ![Captura de pantalla 4](./screenshots/screenshot-4.png)
 
 ## Como se usa CubePath
-Se usa el servicio de VPS de CubePath para el despliegue de la app.
+Se emplea un VPS de CubePath para desplegar la aplicación sobre el sistema operativo Ubuntu 24.
