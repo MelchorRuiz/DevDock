@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link href="{{ url_for('static', filename='dist/output.css') }}" rel="stylesheet" />
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .code-glow {
+            text-shadow: 0 0 15px color-mix(in srgb, var(--color-primary) 30%, transparent);
+        }
+
+        .terminal-window {
+            background: linear-gradient(180deg,
+                    color-mix(in srgb, var(--color-surface-variant) 80%, transparent) 0%,
+                    var(--color-background) 100%);
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-surface font-body selection:bg-primary/30 selection:text-primary">
+    <!-- TopNavBar Shell -->
+    <header class="w-full border-b border-outline-variant/15 bg-background font-headline antialiased">
+        <nav class="flex justify-between items-center h-16 px-8 w-full max-w-360 mx-auto">
+            <div class="flex items-center gap-8">
+                <span class="text-xl font-bold tracking-tight text-primary">DevDock</span>
+                <div class="hidden md:flex gap-6">
+                    <a class="text-on-surface-variant {% if request.endpoint == 'main.index' %}text-primary{% endif %} hover:text-primary transition-colors duration-200"
+                        href="{{ url_for('main.index') }}">Inicio </a>
+                    <a class="text-on-surface-variant {% if request.endpoint == 'dashboard.index' %}text-primary{% endif %} hover:text-primary transition-colors duration-200"
+                        href="{{ url_for('dashboard.index') }}">Dashboard</a>
+                    <a class="text-on-surface-variant {% if request.endpoint == 'saved.index' %}text-primary{% endif %} hover:text-primary transition-colors duration-200"
+                        href="{{ url_for('saved.index') }}">Guardados</a>
+                    <a class="text-on-surface-variant {% if request.endpoint == 'suggest.index' %}text-primary{% endif %} hover:text-primary transition-colors duration-200"
+                        href="{{ url_for('suggest.index') }}">Sugerir una herramienta</a>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <button
+                    class="hidden md:flex bg-surface-container-low px-3 py-1.5 rounded-md items-center gap-2 border border-outline-variant/20 cursor-pointer">
+                    <span class="material-symbols-outlined text-on-surface-variant text-sm">search</span>
+                    <span class="text-on-surface-variant text-xs font-label">Buscar herramientas..</span>
+                    <span class="text-[10px] bg-surface-container-high px-1.5 py-0.5 rounded text-outline">Ctrl +
+                        K</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    {% block content %}{% endblock %}
+
+    <!-- Footer Shell -->
+    <footer
+        class="w-full border-t border-outline-variant/15 py-12 bg-background font-['Space_Grotesk'] text-sm tracking-wide">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 px-8 max-w-360 mx-auto">
+            <div class="space-y-4">
+                <span class="text-lg font-black text-primary">DevDock</span>
+                <p class="text-on-surface-variant max-w-sm">
+                    DevDock es una biblioteca inteligente de recursos: un ecosistema que organiza y encuentra herramientas mediante IA para que nunca pierdas tiempo buscando lo que necesitas para crear.
+                </p>
+                <p class="text-on-surface-variant">Hecho con ❤️ por Melchor Ruiz</p>
+            </div>
+            <div class="flex flex-wrap gap-x-8 gap-y-4 md:justify-end items-start pt-2">
+                <a class="text-on-surface-variant {% if request.endpoint == 'main.index' %}text-primary{% endif %}" href="{{ url_for('main.index') }}">Inicio</a>
+                <a class="text-on-surface-variant {% if request.endpoint == 'dashboard.index' %}text-primary{% endif %}" href="{{ url_for('dashboard.index') }}">Dashboard</a>
+                <a class="text-on-surface-variant {% if request.endpoint == 'saved.index' %}text-primary{% endif %}" href="{{ url_for('saved.index') }}">Guardados</a>
+                <a class="text-on-surface-variant {% if request.endpoint == 'suggest.index' %}text-primary{% endif %}" href="{{ url_for('suggest.index') }}">Sugerir una herramienta</a>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

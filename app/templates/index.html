@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<main class="pt-16">
+    <!-- Hero Section -->
+    <section class="relative min-h-230.25 flex flex-col items-center justify-center px-6 overflow-hidden">
+        <!-- Background Glows -->
+        <div
+            class="absolute top-1/4 left-1/2 -translate-x-1/2 w-200 h-100 bg-primary/10 blur-[120px] rounded-full pointer-events-none">
+        </div>
+        <div
+            class="absolute bottom-1/4 right-0 w-100 h-100 bg-secondary/5 blur-[100px] rounded-full pointer-events-none">
+        </div>
+        <div class="max-w-5xl w-full text-center relative z-10">
+            <h1
+                class="text-5xl md:text-8xl font-black font-headline tracking-tighter mb-6 bg-linear-to-b from-white to-on-surface-variant bg-clip-text text-transparent">
+                Tu Puerto de <br /> <span class="text-primary italic">Herramientas</span> con IA
+            </h1>
+            <p class="text-xl md:text-2xl text-on-surface-variant font-light max-w-2xl mx-auto mb-10 leading-relaxed">
+                <span class="text-on-surface font-semibold">DevDock</span>
+                es una biblioteca inteligente de
+                <span class="text-on-surface font-semibold">recursos</span>
+                : un ecosistema que
+                <span class="text-on-surface font-semibold">organiza</span>
+                y
+                <span class="text-on-surface font-semibold">encuentra</span>
+                herramientas mediante
+                <span class="text-on-surface font-semibold">IA</span>
+                para que nunca pierdas tiempo buscando lo que necesitas para
+                <span class="text-on-surface font-semibold">crear</span>.
+            </p>
+            <div class="flex flex-col md:flex-row gap-4 justify-center items-center mb-20">
+                <a href="{{ url_for('dashboard.index') }}"
+                    class=" bg-primary hover:bg-primary-dim text-on-primary-container px-10 py-4 rounded-xl font-label font-bold text-lg shadow-[0_0_30px_rgba(129,236,255,0.3)] transition-all">
+                    Accede al Dashboard
+                </a>
+            </div>
+            <!-- Bento Grid App Mockup -->
+            <div
+                class="relative w-full max-w-6xl mx-auto mt-12 p-4 bg-surface-container-low rounded-4xl border border-outline-variant/10 shadow-2xl">
+                <div class="grid grid-cols-12 gap-4 aspect-video">
+                    <!-- Sidebar Mockup -->
+                    <div class="col-span-2 bg-surface-container rounded-2xl p-4 flex flex-col gap-4">
+                        <div class="w-8 h-8 rounded bg-primary/20 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-primary text-sm">terminal</span>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="h-2 w-full bg-surface-container-high rounded-full"></div>
+                            <div class="h-2 w-2/3 bg-surface-container-high rounded-full opacity-50"></div>
+                            <div class="h-2 w-3/4 bg-surface-container-high rounded-full opacity-50"></div>
+                        </div>
+                    </div>
+                    <!-- Main Content Mockup -->
+                    <div class="col-span-10 grid grid-cols-3 grid-rows-2 gap-4">
+                        <div
+                            class="col-span-2 row-span-1 bg-surface-container rounded-2xl p-6 relative overflow-hidden bento-glow">
+                            <div class="flex justify-between mb-4">
+                                <div class="h-4 w-32 bg-primary/20 rounded"></div>
+                                <div class="h-4 w-4 bg-outline-variant rounded"></div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="h-2 w-full bg-outline-variant/20 rounded-full"></div>
+                                <div class="h-2 w-full bg-outline-variant/20 rounded-full"></div>
+                                <div class="h-2 w-1/2 bg-outline-variant/20 rounded-full"></div>
+                            </div>
+                        </div>
+                        <div
+                            class="col-span-1 row-span-2 bg-surface-container rounded-2xl p-6 bento-glow overflow-hidden">
+                            <img class="w-full h-full object-cover rounded-xl opacity-60"
+                                data-alt="Cyberpunk style UI dashboard with glowing data visualization charts and neural network node connections on a dark glass surface"
+                                src="{{ url_for('static', filename='images/comparison.png') }}" />
+                        </div>
+                        <div class="col-span-1 row-span-1 bg-secondary-container/10 rounded-2xl p-6 bento-glow">
+                            <span class="material-symbols-outlined text-secondary text-3xl mb-4">inventory_2</span>
+                            <div class="h-3 w-16 bg-secondary/30 rounded mb-2"></div>
+                            <div class="h-2 w-full bg-outline-variant/20 rounded-full"></div>
+                        </div>
+                        <div class="col-span-1 row-span-1 bg-tertiary-container/10 rounded-2xl p-6 bento-glow">
+                            <span class="material-symbols-outlined text-tertiary text-3xl mb-4">account_tree</span>
+                            <div class="h-3 w-16 bg-tertiary/30 rounded mb-2"></div>
+                            <div class="h-2 w-full bg-outline-variant/20 rounded-full"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Why DevDock Section -->
+    <section class="py-32 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+                <div class="max-w-xl">
+                    <h3 class="text-4xl md:text-6xl font-headline font-bold tracking-tight">
+                        Características de DevDock
+                    </h3>
+                </div>
+                <p class="text-on-surface-variant font-body max-w-sm mb-2">
+                    Dejamos atrás las carpetas estáticas y los marcadores olvidados.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Feature 1 -->
+                <div
+                    class="p-8 rounded-4xl bg-surface-container border border-outline-variant/10 hover:bg-surface-container-high transition-all group">
+                    <div
+                        class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <span class="material-symbols-outlined text-primary">search</span>
+                    </div>
+                    <h4 class="text-2xl font-headline font-bold mb-4">Búsqueda Semántica</h4>
+                    <p class="text-on-surface-variant leading-relaxed">
+                        Olvida las palabras clave exactas. Gracias a los Embeddings, puedes buscar por intención (ej.
+                        "algo para que mi web cargue rápido") y la app te devolverá herramientas de optimización de
+                        imágenes o minificadores de código
+                    </p>
+                </div>
+                <!-- Feature 2 -->
+                <div
+                    class="p-8 rounded-4xl bg-surface-container border border-outline-variant/10 hover:bg-surface-container-high transition-all group">
+                    <div
+                        class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <span class="material-symbols-outlined text-secondary">dashboard</span>
+                    </div>
+                    <h4 class="text-2xl font-headline font-bold mb-4">Interfaz de Alta Velocidad</h4>
+                    <p class="text-on-surface-variant leading-relaxed">
+                        Un dashboard optimizado para el flujo de trabajo del desarrollador, con buscador global tipo
+                        Command Palette (Ctrl+K) para acceso instantáneo.
+                    </p>
+                </div>
+                <!-- Feature 3 -->
+                <div
+                    class="p-8 rounded-4xl bg-surface-container border border-outline-variant/10 hover:bg-surface-container-high transition-all group">
+                    <div
+                        class="w-12 h-12 rounded-xl bg-tertiary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <span class="material-symbols-outlined text-tertiary">data_object</span>
+                    </div>
+                    <h4 class="text-2xl font-headline font-bold mb-4">Scraping Automatizado</h4>
+                    <p class="text-on-surface-variant leading-relaxed">
+                        Copia una URL y DevDock extraerá su contenido mediante scraping y usa IA para decidir si cumplen
+                        con los estándares de calidad antes de añadirlos a nuestra biblioteca. Adiós a los enlaces rotos
+                        y las herramientas obsoletas.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Comparison Section -->
+    <section class="py-20 px-6 bg-surface-container-low">
+        <div class="max-w-5xl mx-auto bg-surface-container rounded-[3rem] p-8 md:p-16 border border-outline-variant/10">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h3 class="text-3xl font-headline font-bold mb-6">Comparación de búsqueda</h3>
+                    <div class="space-y-6">
+                        <div class="p-4 rounded-xl bg-surface-container-lowest border border-error/20">
+                            <span class="text-error font-label text-xs uppercase block mb-2">
+                                Búsqueda Tradicional
+                            </span>
+                            <p class="text-on-surface-variant text-sm">Búsqueda: "Documentar una API de Node.js"</p>
+                            <div class="mt-2 text-xs text-outline italic">0 resultados específicos en tus notas
+                                personales.</div>
+                        </div>
+                        <div class="p-4 rounded-xl bg-primary/5 border border-primary/20">
+                            <span class="text-primary font-label text-xs uppercase block mb-2">
+                                Búsqueda DevDock
+                            </span>
+                            <p class="text-on-surface text-sm">
+                                Búsqueda: "Documentar una API de Node.js"
+                            </p>
+                            <div class="mt-2 flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                                <span class="text-xs text-primary font-medium">Swagger</span>
+                            </div>
+                            <div class="mt-2 flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                                <span class="text-xs text-primary font-medium">Postman</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <img class="w-full rounded-2xl shadow-lg border border-outline-variant/20"
+                        data-alt="Close-up of high-tech code editor with glowing AI suggested code blocks and floating metallic interface elements in deep blue and purple tones"
+                        src="{{ url_for('static', filename='images/comparison.png') }}" />
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+{% endblock %}

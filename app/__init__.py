@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, render_template
 from config import config
 
 def create_app():
@@ -11,10 +11,16 @@ def create_app():
     
     from app.routes.main import main_bp
     app.register_blueprint(main_bp)
+    from app.routes.dashboard import dashboard_bp
+    app.register_blueprint(dashboard_bp, url_prefix='/dashboard')
+    from app.routes.saved import saved_bp
+    app.register_blueprint(saved_bp, url_prefix='/saved')
+    from app.routes.suggest import suggest_bp
+    app.register_blueprint(suggest_bp, url_prefix='/suggest')
     
     @app.errorhandler(404)
     def page_not_found(e):
-        return "Page not found", 404
+        return render_template('404.html'), 404
     
     return app
     
