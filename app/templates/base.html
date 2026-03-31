@@ -30,7 +30,7 @@
                 <div class="hidden md:flex gap-6">
                     <a class="text-on-surface-variant {% if request.endpoint == 'main.index' %}text-primary{% endif %} hover:text-primary transition-colors duration-200"
                         href="{{ url_for('main.index') }}">Inicio </a>
-                    <a class="text-on-surface-variant {% if request.endpoint == 'dashboard.index' %}text-primary{% endif %} hover:text-primary transition-colors duration-200"
+                    <a class="text-on-surface-variant {% if request.endpoint in ['dashboard.index', 'dashboard.tool_detail'] %}text-primary{% endif %} hover:text-primary transition-colors duration-200"
                         href="{{ url_for('dashboard.index') }}">Dashboard</a>
                     <a class="text-on-surface-variant {% if request.endpoint == 'saved.index' %}text-primary{% endif %} hover:text-primary transition-colors duration-200"
                         href="{{ url_for('saved.index') }}">Guardados</a>
@@ -73,7 +73,7 @@
             <div class="flex flex-wrap gap-x-8 gap-y-4 md:justify-end items-start pt-2">
                 <a class="text-on-surface-variant {% if request.endpoint == 'main.index' %}text-primary{% endif %}"
                     href="{{ url_for('main.index') }}">Inicio</a>
-                <a class="text-on-surface-variant {% if request.endpoint == 'dashboard.index' %}text-primary{% endif %}"
+                <a class="text-on-surface-variant {% if request.endpoint in ['dashboard.index', 'dashboard.tool_detail'] %}text-primary{% endif %}"
                     href="{{ url_for('dashboard.index') }}">Dashboard</a>
                 <a class="text-on-surface-variant {% if request.endpoint == 'saved.index' %}text-primary{% endif %}"
                     href="{{ url_for('saved.index') }}">Guardados</a>

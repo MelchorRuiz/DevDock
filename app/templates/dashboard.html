@@ -32,7 +32,7 @@
 
 {% block content %}
 
-<div class="flex">
+<div class="flex min-h-160">
     <!-- SideNavBar -->
     <aside class="flex flex-col p-4 bg-surface w-64 border-r border-surface-container z-40 overflow-y-auto">
         <nav class="space-y-1">
@@ -68,8 +68,9 @@
                 {% if tools %}
                 {% for tool in tools %}
                 <!-- Tool Card -->
-                <div
-                    class="bg-surface-container rounded-xl p-6 flex flex-col border border-outline-variant/5 hover:bg-surface-container-high transition-all relative">
+                <div class="bg-surface-container rounded-xl p-6 flex flex-col border border-outline-variant/5 hover:bg-surface-container-high transition-all relative cursor-pointer"
+                    data-detail-url="{{ url_for('dashboard.tool_detail', tool_id=tool.id) }}?from=dashboard"
+                    onclick="window.location=this.dataset.detailUrl">
                     <div class="mb-4 flex items-center gap-3">
                         {% if tool.favicon_url %}
                         <img src="{{ tool.favicon_url }}" alt="{{ tool.name }} favicon"
@@ -92,14 +93,22 @@
                         {% endfor %}
                     </div>
                     {% endif %}
-                    <div class="mt-auto flex justify-between items-center">
+                    <div class="mt-auto flex justify-end gap-2 items-center">
+                        <button
+                            class="save-tool-btn p-2 hover:bg-surface-container-highest rounded-lg transition-colors cursor-pointer"
+                            type="button" data-tool-id="{{ tool.id }}" data-tool-name="{{ tool.name }}"
+                            data-tool-url="{{ tool.url }}" onclick="event.stopPropagation();">
+                            <span class="material-symbols-outlined text-sm">bookmark</span>
+                        </button>
                         <a href="{{ tool.url }}" target="_blank" rel="noopener noreferrer"
-                            class="text-[10px] font-label text-primary uppercase tracking-tighter hover:text-primary-container transition-colors">
-                            Ir a Herramienta
-                        </a>
-                        <a href="{{ tool.url }}" target="_blank" rel="noopener noreferrer"
-                            class="p-2 hover:bg-surface-container-highest rounded-lg transition-colors">
+                            class="p-2 hover:bg-surface-container-highest rounded-lg transition-colors"
+                            onclick="event.stopPropagation();" title="Abrir herramienta">
                             <span class="material-symbols-outlined text-sm">open_in_new</span>
+                        </a>
+                        <a href="{{ url_for('dashboard.tool_detail', tool_id=tool.id) }}?from=dashboard"
+                            class="p-2 hover:bg-surface-container-highest rounded-lg transition-colors"
+                            onclick="event.stopPropagation();" title="Ver detalle">
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
                         </a>
                     </div>
                 </div>
@@ -115,4 +124,8 @@
     </main>
 </div>
 
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/tool-save.js') }}"></script>
 {% endblock %}
