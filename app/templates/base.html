@@ -39,12 +39,12 @@
                 </div>
             </div>
             <div class="flex items-center gap-4">
-                <button
-                    class="hidden md:flex bg-surface-container-low px-3 py-1.5 rounded-md items-center gap-4 border border-outline-variant/20 cursor-pointer">
+                <button id="global-search-trigger" type="button"
+                    class="flex bg-surface-container-low px-3 py-1.5 rounded-md items-center gap-4 border border-outline-variant/20 cursor-pointer">
                     <span class="material-symbols-outlined text-on-surface-variant text-sm">search</span>
                     <span class="text-on-surface-variant text-xs font-label">Buscar herramientas..</span>
                     <div class="flex items-center gap-1 pointer-events-none">
-                        <kbd
+                        <kbd id="search-shortcut-modifier"
                             class="px-2 py-0.5 rounded bg-surface-container-high border border-outline-variant text-[10px] font-label text-on-surface-variant">CTRL</kbd>
                         <kbd
                             class="px-2 py-0.5 rounded bg-surface-container-high border border-outline-variant text-[10px] font-label text-on-surface-variant">K</kbd>
@@ -56,6 +56,27 @@
 
     <div class="pt-16">
         {% block content %}{% endblock %}
+    </div>
+
+    <div id="command-palette"
+        class="fixed inset-0 z-100 hidden items-start justify-center bg-black/50 p-4 pt-24 backdrop-blur-sm"
+        aria-hidden="true">
+        <div class="w-full max-w-2xl rounded-2xl border border-outline-variant/30 bg-surface shadow-2xl">
+            <div class="flex items-center gap-3 border-b border-outline-variant/20 px-4 py-3">
+                <span class="material-symbols-outlined text-on-surface-variant text-sm">search</span>
+                <input id="command-palette-input" type="text" autocomplete="off"
+                    placeholder="Busca una herramienta y presiona Enter"
+                    class="w-full bg-transparent text-sm text-on-surface outline-none placeholder:text-on-surface-variant" />
+                <button id="command-palette-close" type="button"
+                    class="rounded-md p-1 text-on-surface-variant hover:bg-surface-container-high"
+                    aria-label="Cerrar búsqueda">
+                    <span class="material-symbols-outlined text-sm">close</span>
+                </button>
+            </div>
+            <p class="px-4 py-3 text-xs text-on-surface-variant">
+                Atajos: Enter para buscar, Esc para cerrar.
+            </p>
+        </div>
     </div>
 
     <!-- Footer Shell -->
@@ -82,6 +103,89 @@
             </div>
         </div>
     </footer>
+    <script>
+        (function () {
+            const palette = document.getElementById('command-palette');
+            const input = document.getElementById('command-palette-input');
+            const trigger = document.getElementById('global-search-trigger');
+            const closeButton = document.getElementById('command-palette-close');
+            const shortcutModifier = document.getElementById('search-shortcut-modifier');
+            const searchBaseUrl = "{{ url_for('dashboard.search') }}";
+            const isMac = /Mac|iPhone|iPad|iPod/.test(window.navigator.platform);
+
+            if (!palette || !input || !trigger || !closeButton) {
+                return;
+            }
+
+            if (shortcutModifier) {
+                shortcutModifier.textContent = isMac ? 'CMD' : 'CTRL';
+            }
+
+            function openPalette() {
+                palette.classList.remove('hidden');
+                palette.classList.add('flex');
+                palette.setAttribute('aria-hidden', 'false');
+                const currentQuery = new URLSearchParams(window.location.search).get('q');
+                input.value = currentQuery || '';
+                window.requestAnimationFrame(() => input.focus());
+            }
+
+            function closePalette() {
+                palette.classList.add('hidden');
+                palette.classList.remove('flex');
+                palette.setAttribute('aria-hidden', 'true');
+            }
+
+            function goToSearch() {
+                const term = input.value.trim();
+                if (!term) {
+                    return;
+                }
+                const targetUrl = searchBaseUrl + '?q=' + encodeURIComponent(term);
+                window.location.href = targetUrl;
+            }
+
+            trigger.addEventListener('click', openPalette);
+            closeButton.addEventListener('click', closePalette);
+
+            palette.addEventListener('click', function (event) {
+                if (event.target === palette) {
+                    closePalette();
+                }
+            });
+
+            input.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    goToSearch();
+                }
+                if (event.key === 'Escape') {
+                    event.preventDefault();
+                    closePalette();
+                }
+            });
+
+            document.addEventListener('keydown', function (event) {
+                const isK = event.key && event.key.toLowerCase() === 'k';
+                const withModifier = isMac ? event.metaKey : event.ctrlKey;
+
+                if (withModifier && isK) {
+                    event.preventDefault();
+                    if (palette.classList.contains('hidden')) {
+                        openPalette();
+                    } else {
+                        closePalette();
+                    }
+                    return;
+                }
+
+                if (event.key === 'Escape' && !palette.classList.contains('hidden')) {
+                    event.preventDefault();
+                    closePalette();
+                }
+            });
+        })();
+    </script>
     {% block extra_scripts %}{% endblock %}
 </body>
 

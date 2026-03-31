@@ -60,3 +60,25 @@ def tool_detail(tool_id):
         tool=tool,
         origin=origin,
     )
+
+@dashboard_bp.route('/search')
+def search():
+    query = request.args.get('q', '').strip()
+    categories = Category.query.all()
+    tools = []
+
+    if query:
+        tools = (
+            Tool.query.options(selectinload(Tool.tags))
+            .filter(
+                (Tool.name.ilike(f'%{query}%')) |
+                (Tool.description.ilike(f'%{query}%'))
+            )
+            .all()
+        )
+
+    return render_template('search.html',
+                         query=query,
+                         categories=categories,
+                         active_category=None,
+                         tools=tools)
