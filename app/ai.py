@@ -16,6 +16,28 @@ client = genai.Client(api_key=api_key)
 _QUERY_EMBEDDING_CACHE = {}
 _RERANK_CACHE = {}
 
+def _extract_json_object(text):
+    if not text:
+        return {}
+
+    raw = text.strip()
+    try:
+        parsed = json.loads(raw)
+        return parsed if isinstance(parsed, dict) else {}
+    except json.JSONDecodeError:
+        pass
+
+    start = raw.find("{")
+    end = raw.rfind("}")
+    if start == -1 or end == -1 or end <= start:
+        return {}
+
+    try:
+        parsed = json.loads(raw[start : end + 1])
+        return parsed if isinstance(parsed, dict) else {}
+    except json.JSONDecodeError:
+        return {}
+
 def generate_embeddings(text):
     result  = client.models.embed_content(
         model="gemini-embedding-001",
@@ -132,5 +154,34 @@ def rerank_tools(query, tools):
     _RERANK_CACHE[cache_key] = [tool.id for tool in reranked]
 
     return reranked
+
+
+def analyze_suggested_tool(url, scraped_data, categories):
+    prompt = (
+        "Eres un sistema de revision para sugerencias de herramientas de programacion. "
+        "Debes decidir si el enlace corresponde a una herramienta util para programadores. "
+        "Usa la informacion de scraping disponible.\n\n"
+        f"Categorias disponibles: {json.dumps(categories, ensure_ascii=False)}\n\n"
+        f"URL: {url}\n"
+        f"Titulo: {scraped_data.get('title', '')}\n"
+        f"Descripcion: {scraped_data.get('description', '')}\n"
+        f"H1: {scraped_data.get('h1', '')}\n"
+        f"Texto: {scraped_data.get('text', '')}\n\n"
+        "Responde SOLO con JSON valido y sin texto adicional. "
+        "El formato debe ser: "
+        '{"is_tool": true, "name": "...", "description": "...", "category": "...", "tags": ["..."]}. '
+        "Si no es una herramienta, usa is_tool=false y deja name/description/category vacios o tags=[] "
+        "pero incluye siempre todas las claves."
+    )
+
+    try:
+        response = client.models.generate_content(
+            model="gemini-3-flash-preview",
+            contents=prompt,
+        )
+        print(f"🔍 Analysis response for {url}: {getattr(response, 'text', '')}")  # Debug log
+        return _extract_json_object(getattr(response, "text", ""))
+    except Exception:
+        return {}
     
  

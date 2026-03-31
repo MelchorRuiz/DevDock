@@ -2,4 +2,306 @@
 
 {% block content %}
 
+<style>
+    .glass-panel {
+        background: rgba(26, 25, 27, 0.6);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+    }
+
+    .shimmer-text {
+        background: linear-gradient(90deg, #81ecff, #ffffff, #81ecff);
+        background-size: 200% auto;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+</style>
+
+<!-- Main Content Canvas -->
+<main class="min-h-screen flex flex-col items-center justify-center px-8 bg-surface">
+    <!-- Suggestions Panel Container -->
+    <div class="w-full max-w-2xl">
+        <!-- Header Section -->
+        <div class="mb-8 text-center">
+            <h1 class="text-4xl font-extrabold tracking-tighter mb-2 font-headline">Envía a la comunidad</h1>
+            <p class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Comparte recursos técnicos
+                de alta calidad en el ecosistema DevDock</p>
+        </div>
+        <!-- Glassmorphism Main Panel -->
+        <div class="glass-panel rounded-xl p-8 border border-outline-variant/20 shadow-2xl relative overflow-hidden">
+            <!-- Subtle background glow -->
+            <div class="absolute -top-24 -right-24 w-64 h-64 bg-primary/5 rounded-full blur-[100px]"></div>
+            <div class="relative z-10 space-y-8">
+                <!-- Form: Minimalist URL Input -->
+                <div class="space-y-3">
+                    <label class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant ml-1">URL
+                        del enlace</label>
+                    <div class="relative group">
+                        <input id="suggest-url"
+                            class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg px-4 py-4 text-primary focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all font-mono text-sm placeholder:text-outline"
+                            placeholder="https://github.com/archive/repository-name" type="url" />
+                        <div class="absolute right-4 top-1/2 -translate-y-1/2">
+                            <span class="material-symbols-outlined text-primary text-xl">link</span>
+                        </div>
+                    </div>
+                    <p id="review-status"
+                        class="text-[10px] font-label text-on-surface-variant uppercase tracking-wider"></p>
+                </div>
+                <!-- Processing State: Analyzing -->
+                <div id="analysis-panel"
+                    class="hidden items-center justify-between p-4 bg-surface-container-low rounded-lg border border-outline-variant/10">
+                    <div class="flex items-center gap-4">
+                        <div class="relative flex items-center justify-center">
+                            <div class="w-8 h-8 rounded-full border-2 border-primary/20 border-t-primary animate-spin">
+                            </div>
+                            <span class="material-symbols-outlined absolute text-primary text-xs"
+                                style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-semibold shimmer-text">Analizando...</h3>
+                            <p class="text-[10px] font-label text-on-surface-variant uppercase tracking-wider">Scraping
+                                inteligente y evaluacion con IA</p>
+                        </div>
+                    </div>
+                    <div
+                        class="flex items-center gap-2 px-3 py-1 bg-surface-container-high rounded-full border border-outline-variant/20">
+                        <div class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></div>
+                        <span class="text-[10px] font-label text-primary uppercase">Validando estado del enlace</span>
+                    </div>
+                </div>
+                <!-- Metadata Preview (IA Generating) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Technical Description Block -->
+                    <div class="bg-surface-container rounded-lg p-5 border border-outline-variant/10 space-y-3">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary text-lg">description</span>
+                            <span
+                                class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Descripcion
+                                generada por IA</span>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="h-3 bg-surface-container-high rounded-full w-full overflow-hidden relative">
+                                <div
+                                    class="absolute inset-0 bg-linear-to-r from-transparent via-primary/10 to-transparent -translate-x-full animate-[shimmer_2s_infinite]">
+                                </div>
+                            </div>
+                            <div class="h-3 bg-surface-container-high rounded-full w-4/5 overflow-hidden relative">
+                                <div
+                                    class="absolute inset-0 bg-linear-to-r from-transparent via-primary/10 to-transparent -translate-x-full animate-[shimmer_2s_infinite] delay-100">
+                                </div>
+                            </div>
+                            <p id="ai-description" class="text-xs text-on-surface-variant italic pt-1">Determinando la
+                                arquitectura del
+                                repositorio...</p>
+                        </div>
+                    </div>
+                    <!-- Technical Tags Block -->
+                    <div class="bg-surface-container rounded-lg p-5 border border-outline-variant/10 space-y-3">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-secondary text-lg">label</span>
+                            <span
+                                class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Etiquetas
+                                IA</span>
+                        </div>
+                        <div id="ai-tags" class="flex flex-wrap gap-2">
+                            <span
+                                class="px-2 py-1 bg-surface-container-high text-[10px] text-outline border border-outline-variant/20 rounded font-label">SIN
+                                ETIQUETAS</span>
+                        </div>
+                        <p class="text-[10px] text-on-surface-variant uppercase tracking-wider">Categoria: <span
+                                id="ai-category">-</span></p>
+                    </div>
+                </div>
+                <!-- Bottom Action Bar -->
+                <div class="pt-4 flex items-center justify-between border-t border-outline-variant/10">
+                    <button id="review-button"
+                        class="text-on-surface-variant hover:text-on-surface text-xs font-label uppercase tracking-widest transition-colors">Revisar
+                        enlace</button>
+                    <button id="submit-button"
+                        class="bg-surface-container-highest text-on-surface-variant cursor-not-allowed px-8 py-3 rounded-lg font-bold text-sm transition-all flex items-center gap-2"
+                        disabled>
+                        <span>Enviar a Dock</span>
+                        <span class="material-symbols-outlined text-base">send</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Contextual Info Cards (Bento style) -->
+        <div class="grid grid-cols-2 gap-4 mt-8">
+            <div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/10">
+                <span class="material-symbols-outlined text-primary mb-2">verified</span>
+                <h4 class="text-xs font-bold mb-1">Puntaje de calidad</h4>
+                <p class="text-[10px] text-on-surface-variant leading-relaxed">La IA analiza la documentacion y la
+                    estructura del codigo antes de aprobar.</p>
+            </div>
+            <div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/10">
+                <span class="material-symbols-outlined text-secondary mb-2">bolt</span>
+                <h4 class="text-xs font-bold mb-1">Indexacion instantanea</h4>
+                <p class="text-[10px] text-on-surface-variant leading-relaxed">La indexacion es instantanea y se
+                    verifica
+                    mediante scraping y IA para que los enlaces sean buscables al instante.</p>
+            </div>
+        </div>
+    </div>
+</main>
+<style>
+    @keyframes shimmer {
+        0% {
+            transform: translateX(-100%);
+        }
+
+        100% {
+            transform: translateX(100%);
+        }
+    }
+</style>
+
+<script>
+    (function () {
+        var urlInput = document.getElementById('suggest-url');
+        var reviewButton = document.getElementById('review-button');
+        var submitButton = document.getElementById('submit-button');
+        var statusText = document.getElementById('review-status');
+        var analysisPanel = document.getElementById('analysis-panel');
+        var descriptionText = document.getElementById('ai-description');
+        var tagsContainer = document.getElementById('ai-tags');
+        var categoryText = document.getElementById('ai-category');
+        var suggestionId = null;
+
+        function setStatus(message, tone) {
+            statusText.textContent = message;
+            statusText.classList.remove('text-primary', 'text-tertiary', 'text-secondary');
+            if (tone) {
+                statusText.classList.add(tone);
+            }
+        }
+
+        function setLoading(isLoading) {
+            reviewButton.disabled = isLoading;
+            if (isLoading) {
+                reviewButton.classList.add('opacity-60', 'cursor-wait');
+            } else {
+                reviewButton.classList.remove('opacity-60', 'cursor-wait');
+            }
+        }
+
+        function setSubmitEnabled(enabled) {
+            submitButton.disabled = !enabled;
+            if (enabled) {
+                submitButton.classList.remove('cursor-not-allowed', 'text-on-surface-variant');
+                submitButton.classList.add('text-primary');
+            } else {
+                submitButton.classList.add('cursor-not-allowed', 'text-on-surface-variant');
+                submitButton.classList.remove('text-primary');
+            }
+        }
+
+        function renderTags(tags) {
+            tagsContainer.innerHTML = '';
+            if (!tags || !tags.length) {
+                var emptyTag = document.createElement('span');
+                emptyTag.className = 'px-2 py-1 bg-surface-container-high text-[10px] text-outline border border-outline-variant/20 rounded font-label';
+                emptyTag.textContent = 'SIN ETIQUETAS';
+                tagsContainer.appendChild(emptyTag);
+                return;
+            }
+
+            tags.forEach(function (tag) {
+                var chip = document.createElement('span');
+                chip.className = 'px-2 py-1 bg-surface-container-high text-[10px] text-primary border border-primary/20 rounded font-label';
+                chip.textContent = tag.toUpperCase();
+                tagsContainer.appendChild(chip);
+            });
+        }
+
+        reviewButton.addEventListener('click', function () {
+            var url = (urlInput.value || '').trim();
+            if (!url) {
+                setStatus('Ingresa una URL valida.', 'text-tertiary');
+                return;
+            }
+
+            analysisPanel.classList.remove('hidden');
+            setStatus('Revisando enlace...', 'text-secondary');
+            setLoading(true);
+            setSubmitEnabled(false);
+            suggestionId = null;
+
+            fetch('/suggest/review', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: url })
+            })
+                .then(function (response) {
+                    return response.json().then(function (data) {
+                        return { ok: response.ok, data: data };
+                    });
+                })
+                .then(function (result) {
+                    setLoading(false);
+                    if (!result.ok) {
+                        setStatus('No pudimos revisar el enlace. Intenta de nuevo.', 'text-tertiary');
+                        return;
+                    }
+
+                    var data = result.data || {};
+                    suggestionId = data.suggestion_id || null;
+                    var analysis = data.analysis || {};
+                    var tags = analysis.tags || [];
+                    descriptionText.textContent = analysis.description || 'Sin descripcion disponible.';
+                    categoryText.textContent = analysis.category || '-';
+                    renderTags(tags);
+
+                    if (data.status === 'approved') {
+                        setStatus('Resultado positivo. Puedes enviar al Dock.', 'text-primary');
+                        setSubmitEnabled(true);
+                    } else {
+                        setStatus('Resultado negativo. Este enlace no califica.', 'text-tertiary');
+                        setSubmitEnabled(false);
+                    }
+                })
+                .catch(function () {
+                    setLoading(false);
+                    setStatus('Error de red al revisar el enlace.', 'text-tertiary');
+                });
+        });
+
+        submitButton.addEventListener('click', function () {
+            if (!suggestionId) {
+                setStatus('Primero revisa el enlace.', 'text-tertiary');
+                return;
+            }
+
+            setStatus('Enviando al Dock...', 'text-secondary');
+            submitButton.disabled = true;
+
+            fetch('/suggest/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ suggestion_id: suggestionId })
+            })
+                .then(function (response) {
+                    return response.json().then(function (data) {
+                        return { ok: response.ok, data: data };
+                    });
+                })
+                .then(function (result) {
+                    if (!result.ok) {
+                        setStatus('No se pudo enviar al Dock.', 'text-tertiary');
+                        setSubmitEnabled(true);
+                        return;
+                    }
+
+                    setStatus('Enviado correctamente al Dock.', 'text-primary');
+                    reviewButton.disabled = true;
+                    submitButton.disabled = true;
+                })
+                .catch(function () {
+                    setStatus('Error de red al enviar al Dock.', 'text-tertiary');
+                    setSubmitEnabled(true);
+                });
+        });
+    })();
+</script>
+
 {% endblock %}
