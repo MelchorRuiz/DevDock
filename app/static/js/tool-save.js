@@ -66,8 +66,13 @@
         var savedTools = getSavedTools();
 
         buttons.forEach(function (button) {
+            if (button.dataset.saveBound === '1') {
+                return;
+            }
+
             var toolId = button.dataset.toolId;
             updateButtonState(button, isSaved(toolId, savedTools));
+            button.dataset.saveBound = '1';
 
             button.addEventListener('click', function () {
                 var currentTools = getSavedTools();
@@ -84,6 +89,8 @@
             });
         });
     }
+
+    window.initToolSaveButtons = initSaveButtons;
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initSaveButtons);

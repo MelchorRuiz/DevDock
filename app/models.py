@@ -1,4 +1,6 @@
 from app import db
+import json
+from app.ai import generate_embeddings
 
 tool_tags = db.Table(
     'tool_tags',
@@ -18,6 +20,32 @@ class Tool(db.Model):
     
     category = db.relationship('Category', back_populates='tools')
     tags = db.relationship('Tag', secondary=tool_tags, back_populates='tools')
+    
+    def generate_embedding(self):
+        """
+        Generate an embedding vector for the tool using its name, description, category, and tags.
+        """
+        # Build a combined text representation of the tool
+        parts = [self.name, self.description]
+        
+        if self.category:
+            parts.append(f"Categoría: {self.category.name}")
+        
+        if self.tags:
+            tag_names = ", ".join([tag.name for tag in self.tags])
+            parts.append(f"Etiquetas: {tag_names}")
+        
+        combined_text = " ".join(parts)
+        
+        try:
+            # Get the embedding vector from the AI module
+            embedding_vector = generate_embeddings(combined_text)
+            # Store the embedding as a JSON string in the database
+            self.embedding = json.dumps(embedding_vector)
+            return True
+        except Exception as e:
+            print(f"Error generando embedding para {self.name}: {str(e)}")
+            return False
     
     
 class Category(db.Model):

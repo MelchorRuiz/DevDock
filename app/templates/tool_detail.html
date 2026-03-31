@@ -24,6 +24,12 @@
                     <span class="material-symbols-outlined text-base">arrow_back</span>
                     Volver a guardados
                 </a>
+                {% elif origin == 'search' %}
+                <a href="{{ url_for('dashboard.search', q=search_query) }}"
+                    class="inline-flex items-center gap-2 text-sm text-on-surface-variant hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined text-base">arrow_back</span>
+                    Volver a búsqueda
+                </a>
                 {% else %}
                 <a href="{{ url_for('dashboard.index', category=active_category.id if active_category else None) }}"
                     class="inline-flex items-center gap-2 text-sm text-on-surface-variant hover:text-primary transition-colors">
@@ -86,6 +92,11 @@
                     </a>
                     {% if origin == 'saved' %}
                     <a href="{{ url_for('saved.index') }}"
+                        class="inline-flex items-center gap-2 bg-surface-container-highest text-on-surface px-4 py-2.5 rounded-lg font-label text-sm border border-outline-variant/20 hover:bg-surface-container-high transition-colors">
+                        Volver
+                    </a>
+                    {% elif origin == 'search' %}
+                    <a href="{{ url_for('dashboard.search', q=search_query) }}"
                         class="inline-flex items-center gap-2 bg-surface-container-highest text-on-surface px-4 py-2.5 rounded-lg font-label text-sm border border-outline-variant/20 hover:bg-surface-container-high transition-colors">
                         Volver
                     </a>
