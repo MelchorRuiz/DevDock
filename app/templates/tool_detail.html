@@ -4,18 +4,8 @@
 
 {% block content %}
 <div class="flex min-h-160">
-    <aside class="flex flex-col p-4 bg-surface w-64 border-r border-surface-container z-40 overflow-y-auto">
-        <nav class="space-y-1">
-            {% for category in categories %}
-            <a class="flex items-center gap-3 px-4 py-3 rounded-lg {% if active_category and active_category.id == category.id %}bg-surface-container text-primary border-l-2 border-primary{% else %}text-on-surface-variant hover:bg-surface-container-low hover:text-white{% endif %} active:translate-x-1 transition-transform group"
-                href="{{ url_for('dashboard.index', category=category.id) }}">
-                <span class="font-label text-xs uppercase tracking-widest">{{ category.name }}</span>
-            </a>
-            {% endfor %}
-        </nav>
-    </aside>
 
-    <main class="max-w-7xl mx-auto flex-1 bg-surface p-8">
+    <main class="max-w-7xl mx-auto flex-1 bg-surface p-4 sm:p-6 md:p-8">
         <div class="space-y-6">
             <div class="flex items-center justify-between">
                 {% if origin == 'saved' %}
@@ -39,8 +29,9 @@
                 {% endif %}
             </div>
 
-            <article class="bg-surface-container rounded-2xl border border-outline-variant/10 p-8 max-w-5xl mx-auto">
-                <header class="flex items-start gap-4 mb-6">
+            <article
+                class="bg-surface-container rounded-2xl border border-outline-variant/10 p-4 sm:p-6 md:p-8 max-w-5xl mx-auto w-full">
+                <header class="flex flex-col sm:flex-row items-start gap-4 mb-6">
                     <div
                         class="w-12 h-12 rounded-xl bg-surface-container-highest border border-outline-variant/20 flex items-center justify-center shrink-0 overflow-hidden">
                         {% if tool.favicon_url %}
@@ -53,7 +44,9 @@
                         <p class="text-xs uppercase tracking-widest text-primary font-label mb-1">
                             {{ active_category.name if active_category else 'Herramienta' }}
                         </p>
-                        <h1 class="text-3xl font-headline font-bold text-on-surface leading-tight">{{ tool.name }}</h1>
+                        <h1
+                            class="text-2xl sm:text-3xl font-headline font-bold text-on-surface leading-tight wrap-break-word">
+                            {{ tool.name }}</h1>
                     </div>
                 </header>
 
@@ -77,32 +70,32 @@
                 </section>
                 {% endif %}
 
-                <section class="flex items-center gap-3">
+                <section class="flex flex-wrap items-center gap-3">
                     <button
-                        class="save-tool-btn inline-flex items-center gap-2 bg-surface-container-highest text-on-surface px-4 py-2.5 rounded-lg font-label text-sm border border-outline-variant/20 hover:bg-surface-container-high transition-colors cursor-pointer"
+                        class="save-tool-btn inline-flex w-full sm:w-auto justify-center items-center gap-2 bg-surface-container-highest text-on-surface px-4 py-2.5 rounded-lg font-label text-sm border border-outline-variant/20 hover:bg-surface-container-high transition-colors cursor-pointer"
                         type="button" data-tool-id="{{ tool.id }}" data-tool-name="{{ tool.name }}"
                         data-tool-url="{{ tool.url }}">
                         <span class="material-symbols-outlined text-base">bookmark</span>
                         <span class="save-tool-label">Guardar</span>
                     </button>
                     <a href="{{ tool.url }}" target="_blank" rel="noopener noreferrer"
-                        class="inline-flex items-center gap-2 bg-primary text-black font-semibold px-4 py-2.5 rounded-lg font-label text-sm hover:opacity-90 transition-opacity">
+                        class="inline-flex w-full sm:w-auto justify-center items-center gap-2 bg-primary text-black font-semibold px-4 py-2.5 rounded-lg font-label text-sm hover:opacity-90 transition-opacity">
                         Abrir herramienta
                         <span class="material-symbols-outlined text-base">open_in_new</span>
                     </a>
                     {% if origin == 'saved' %}
                     <a href="{{ url_for('saved.index') }}"
-                        class="inline-flex items-center gap-2 bg-surface-container-highest text-on-surface px-4 py-2.5 rounded-lg font-label text-sm border border-outline-variant/20 hover:bg-surface-container-high transition-colors">
+                        class="inline-flex w-full sm:w-auto justify-center items-center gap-2 bg-surface-container-highest text-on-surface px-4 py-2.5 rounded-lg font-label text-sm border border-outline-variant/20 hover:bg-surface-container-high transition-colors">
                         Volver
                     </a>
                     {% elif origin == 'search' %}
                     <a href="{{ url_for('dashboard.search', q=search_query) }}"
-                        class="inline-flex items-center gap-2 bg-surface-container-highest text-on-surface px-4 py-2.5 rounded-lg font-label text-sm border border-outline-variant/20 hover:bg-surface-container-high transition-colors">
+                        class="inline-flex w-full sm:w-auto justify-center items-center gap-2 bg-surface-container-highest text-on-surface px-4 py-2.5 rounded-lg font-label text-sm border border-outline-variant/20 hover:bg-surface-container-high transition-colors">
                         Volver
                     </a>
                     {% else %}
                     <a href="{{ url_for('dashboard.index', category=active_category.id if active_category else None) }}"
-                        class="inline-flex items-center gap-2 bg-surface-container-highest text-on-surface px-4 py-2.5 rounded-lg font-label text-sm border border-outline-variant/20 hover:bg-surface-container-high transition-colors">
+                        class="inline-flex w-full sm:w-auto justify-center items-center gap-2 bg-surface-container-highest text-on-surface px-4 py-2.5 rounded-lg font-label text-sm border border-outline-variant/20 hover:bg-surface-container-high transition-colors">
                         Volver
                     </a>
                     {% endif %}

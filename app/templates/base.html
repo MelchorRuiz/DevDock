@@ -24,7 +24,7 @@
 <body class="bg-background text-on-surface font-body selection:bg-primary/30 selection:text-primary">
     <!-- TopNavBar Shell -->
     <header class="w-full border-b border-outline-variant/15 bg-background font-headline antialiased fixed top-0 z-50">
-        <nav class="flex justify-between items-center h-16 px-8 w-full max-w-360 mx-auto">
+        <nav class="flex justify-between items-center h-16 px-4 md:px-8 w-full max-w-360 mx-auto">
             <div class="flex items-center gap-8">
                 <span class="text-xl font-bold tracking-tight text-primary">DevDock</span>
                 <div class="hidden md:flex gap-6">
@@ -42,16 +42,35 @@
                 <button id="global-search-trigger" type="button"
                     class="flex bg-surface-container-low px-3 py-1.5 rounded-md items-center gap-4 border border-outline-variant/20 cursor-pointer">
                     <span class="material-symbols-outlined text-on-surface-variant text-sm">search</span>
-                    <span class="text-on-surface-variant text-xs font-label">Buscar herramientas..</span>
-                    <div class="flex items-center gap-1 pointer-events-none">
+                    <span class="text-on-surface-variant text-xs font-label hidden md:block">Buscar
+                        herramientas..</span>
+                    <div class="hidden md:flex items-center gap-1 pointer-events-none">
                         <kbd id="search-shortcut-modifier"
                             class="px-2 py-0.5 rounded bg-surface-container-high border border-outline-variant text-[10px] font-label text-on-surface-variant">CTRL</kbd>
                         <kbd
                             class="px-2 py-0.5 rounded bg-surface-container-high border border-outline-variant text-[10px] font-label text-on-surface-variant">K</kbd>
                     </div>
                 </button>
+                <button id="mobile-nav-toggle" type="button"
+                    class="md:hidden rounded-md p-2 text-on-surface-variant hover:bg-surface-container-high border border-outline-variant/20"
+                    aria-expanded="false" aria-controls="mobile-nav-links" aria-label="Abrir menú de navegación">
+                    <span class="material-symbols-outlined text-base">menu</span>
+                </button>
             </div>
         </nav>
+        <div id="mobile-nav-links"
+            class="md:hidden hidden border-t border-outline-variant/15 px-4 pb-4 pt-3 bg-background">
+            <div class="flex flex-col gap-2">
+                <a class="rounded-md px-3 py-2 text-sm text-on-surface-variant {% if request.endpoint == 'main.index' %}text-primary bg-surface-container{% endif %}"
+                    href="{{ url_for('main.index') }}">Inicio</a>
+                <a class="rounded-md px-3 py-2 text-sm text-on-surface-variant {% if request.endpoint in ['dashboard.index', 'dashboard.tool_detail'] %}text-primary bg-surface-container{% endif %}"
+                    href="{{ url_for('dashboard.index') }}">Dashboard</a>
+                <a class="rounded-md px-3 py-2 text-sm text-on-surface-variant {% if request.endpoint == 'saved.index' %}text-primary bg-surface-container{% endif %}"
+                    href="{{ url_for('saved.index') }}">Guardados</a>
+                <a class="rounded-md px-3 py-2 text-sm text-on-surface-variant {% if request.endpoint == 'suggest.index' %}text-primary bg-surface-container{% endif %}"
+                    href="{{ url_for('suggest.index') }}">Sugerir una herramienta</a>
+            </div>
+        </div>
     </header>
 
     <div class="pt-16">
@@ -110,6 +129,8 @@
             const trigger = document.getElementById('global-search-trigger');
             const closeButton = document.getElementById('command-palette-close');
             const shortcutModifier = document.getElementById('search-shortcut-modifier');
+            const mobileNavToggle = document.getElementById('mobile-nav-toggle');
+            const mobileNavLinks = document.getElementById('mobile-nav-links');
             const searchBaseUrl = "{{ url_for('dashboard.search') }}";
             const isMac = /Mac|iPhone|iPad|iPod/.test(window.navigator.platform);
 
@@ -184,6 +205,21 @@
                     closePalette();
                 }
             });
+
+            if (mobileNavToggle && mobileNavLinks) {
+                mobileNavToggle.addEventListener('click', function () {
+                    const isHidden = mobileNavLinks.classList.contains('hidden');
+                    mobileNavLinks.classList.toggle('hidden');
+                    mobileNavToggle.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+                });
+
+                mobileNavLinks.querySelectorAll('a').forEach(function (link) {
+                    link.addEventListener('click', function () {
+                        mobileNavLinks.classList.add('hidden');
+                        mobileNavToggle.setAttribute('aria-expanded', 'false');
+                    });
+                });
+            }
         })();
     </script>
     {% block extra_scripts %}{% endblock %}
