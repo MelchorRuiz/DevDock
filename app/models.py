@@ -1,5 +1,6 @@
 from app import db
 import json
+from sqlalchemy.dialects import mysql
 from app.ai import generate_embeddings
 
 tool_tags = db.Table(
@@ -15,7 +16,10 @@ class Tool(db.Model):
     url = db.Column(db.String(255), nullable=False)
     favicon_url = db.Column(db.String(255), nullable=True)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=True)
-    embedding = db.Column(db.Text, nullable=True)
+    embedding = db.Column(
+        db.Text().with_variant(mysql.LONGTEXT(), 'mysql'),
+        nullable=True
+    )
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     
     category = db.relationship('Category', back_populates='tools')
