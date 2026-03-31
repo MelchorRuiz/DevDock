@@ -1,17 +1,20 @@
 import os
 import math
 import json
-from google import genai
+from openai import OpenAI
 
 # Usar API key desde variable de entorno
-api_key = os.getenv('GOOGLE_API_KEY')
+api_key = os.getenv('OPENROUTER_API_KEY')
 if not api_key:
     raise ValueError(
-        "GOOGLE_API_KEY environment variable not set. "
-        "Please set it with your Gemini API key: export GOOGLE_API_KEY='your-key-here'"
+        "OPENROUTER_API_KEY environment variable not set. "
+        "Please set it with your OpenRouter API key: export OPENROUTER_API_KEY='your-key-here'"
     )
 
-client = genai.Client(api_key=api_key)
+client = OpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key=api_key
+)
 
 _QUERY_EMBEDDING_CACHE = {}
 _RERANK_CACHE = {}
@@ -39,12 +42,12 @@ def _extract_json_object(text):
         return {}
 
 def generate_embeddings(text):
-    result  = client.models.embed_content(
+    result = client.embeddings.create(
         model="gemini-embedding-001",
-        contents=text
+        input=text
     )
     
-    return result.embeddings[0].values
+    return result.data[0].embedding if result.data and len(result.data) > 0 else []
 
 
 def get_query_embedding(query):
@@ -137,11 +140,12 @@ def rerank_tools(query, tools):
     )
 
     try:
-        response = client.models.generate_content(
+        completion = client.chat.completions.create(
             model="gemini-3-flash-preview",
-            contents=prompt,
+            messages=[{"role": "user", "content": prompt}]
         )
-        ordered_ids = _extract_json_array(getattr(response, "text", ""))
+        print(f"Raw reranking response for query: '{query}': {completion.choices[0].message.content}")  # Debug log
+        ordered_ids = _extract_json_array(completion.choices[0].message.content)
         ordered_ids = [int(tool_id) for tool_id in ordered_ids if str(tool_id).isdigit()]
     except Exception:
         return tools
@@ -175,13 +179,14 @@ def analyze_suggested_tool(url, scraped_data, categories):
     )
 
     try:
-        response = client.models.generate_content(
+        completion  = client.chat.completions.create(
             model="gemini-3-flash-preview",
-            contents=prompt,
+            messages=[{"role": "user", "content": prompt}]
         )
-        print(f"🔍 Analysis response for {url}: {getattr(response, 'text', '')}")  # Debug log
-        return _extract_json_object(getattr(response, "text", ""))
-    except Exception:
+        print(f"Raw analysis response for URL: {url}: {completion.choices[0].message.content}")  # Debug log
+        return _extract_json_object(completion.choices[0].message.content)
+    except Exception as e:
+        print(f"Error analyzing suggested tool for URL: {url}: {e}")
         return {}
     
  
