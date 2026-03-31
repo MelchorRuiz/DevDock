@@ -183,6 +183,37 @@ def review():
     if parsed.scheme not in ("http", "https") or not parsed.netloc:
         return jsonify({"error": "invalid_url"}), 400
 
+    if Tool.query.filter_by(url=url).first():
+        return jsonify({"error": "tool_already_exists"}), 409
+
+    approved_suggestion = (
+        Suggestion.query.filter_by(raw_url=url, status="approved")
+        .order_by(Suggestion.created_at.desc())
+        .first()
+    )
+    if approved_suggestion:
+        try:
+            analysis_payload = json.loads(approved_suggestion.ai_analysis or "{}")
+        except json.JSONDecodeError:
+            analysis_payload = {}
+
+        return jsonify(
+            {
+                "suggestion_id": approved_suggestion.id,
+                "status": "approved",
+                "analysis": analysis_payload.get("analysis") or {},
+            }
+        )
+
+    previous_suggestion = Suggestion.query.filter_by(raw_url=url).order_by(Suggestion.created_at.desc()).first()
+    if previous_suggestion:
+        return jsonify(
+            {
+                "error": "url_already_validated",
+                "status": previous_suggestion.status,
+            }
+        ), 409
+
     try:
         suggestion = Suggestion(
             raw_url=url,
