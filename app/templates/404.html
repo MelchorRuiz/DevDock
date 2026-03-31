@@ -1,5 +1,21 @@
 {% extends "base.html" %}
 
+{% block title %}Página No Encontrada{% endblock %}
+
+{% block extra_head %}
+<style>
+    .code-glow {
+        text-shadow: 0 0 15px color-mix(in srgb, var(--color-primary) 30%, transparent);
+    }
+
+    .terminal-window {
+        background: linear-gradient(180deg,
+                color-mix(in srgb, var(--color-surface-variant) 80%, transparent) 0%,
+                var(--color-background) 100%);
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 
 <main class="min-h-[calc(100vh-16rem)] flex flex-col items-center justify-center px-6 py-20 relative overflow-hidden">

@@ -1,5 +1,118 @@
 {% extends "base.html" %}
 
+{% block title %}Dashboard{% endblock %}
+
+{% block extra_head %}
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .glass-panel {
+        background: rgba(38, 38, 39, 0.6);
+        backdrop-filter: blur(20px);
+    }
+
+    .bento-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        grid-auto-rows: minmax(200px, auto);
+        gap: 1.5rem;
+    }
+
+    .bento-span-2 {
+        grid-column: span 2;
+    }
+
+    .bento-row-2 {
+        grid-row: span 2;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
+
+<div class="flex">
+    <!-- SideNavBar -->
+    <aside class="flex flex-col p-4 bg-surface w-64 border-r border-surface-container z-40 overflow-y-auto">
+        <nav class="space-y-1">
+            {% for category in categories %}
+            <!-- Category Item -->
+            <a class="flex items-center gap-3 px-4 py-3 rounded-lg {% if active_category and active_category.id == category.id %}bg-surface-container text-primary border-l-2 border-primary{% else %}text-on-surface-variant hover:bg-surface-container-low hover:text-white{% endif %} active:translate-x-1 transition-transform group"
+                href="{{ url_for('dashboard.index', category=category.id) }}">
+                <span class="font-label text-xs uppercase tracking-widest">{{ category.name }}</span>
+            </a>
+            {% endfor %}
+        </nav>
+    </aside>
+    <!-- Main Content Area -->
+    <main class="flex-1 bg-surface p-8">
+        <div class="max-w-7xl mx-auto">
+            <header class="mb-10 flex items-end justify-between">
+                <div>
+                    <h1 class="text-3xl font-headline font-extrabold tracking-tight mb-2">
+                        {% if active_category %}{{ active_category.name }}{% else %}Categorías{% endif %}
+                    </h1>
+                    <p class="text-on-surface-variant max-w-lg">
+                        {% if active_category %}
+                        Explora las diferentes herramientas y recursos disponibles para desarrolladores de la categoría
+                        "{{ active_category.name }}".
+                        {% else %}
+                        Selecciona una categoría para ver las herramientas disponibles.
+                        {% endif %}
+                    </p>
+                </div>
+            </header>
+            <!-- Bento Grid Tools -->
+            <div class="bento-grid">
+                {% if tools %}
+                {% for tool in tools %}
+                <!-- Tool Card -->
+                <div
+                    class="bg-surface-container rounded-xl p-6 flex flex-col border border-outline-variant/5 hover:bg-surface-container-high transition-all relative">
+                    <div class="mb-4 flex items-center gap-3">
+                        {% if tool.favicon_url %}
+                        <img src="{{ tool.favicon_url }}" alt="{{ tool.name }} favicon"
+                            class="w-5 h-5 rounded object-contain">
+                        {% else %}
+                        <span class="material-symbols-outlined text-primary" data-icon="link">link</span>
+                        {% endif %}
+                        <span class="text-[10px] font-label uppercase text-primary tracking-widest">{{
+                            active_category.name if active_category else 'Herramienta' }}</span>
+                    </div>
+                    <h3 class="text-lg font-headline font-bold mb-2">{{ tool.name }}</h3>
+                    <p class="text-xs text-on-surface-variant mb-6 line-clamp-3">{{ tool.description }}</p>
+                    {% if tool.tags %}
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        {% for tag in tool.tags %}
+                        <span
+                            class="text-[10px] font-label bg-surface-container-highest px-2 py-0.5 rounded text-on-surface-variant border border-outline-variant/20">
+                            {{ tag.name }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class="mt-auto flex justify-between items-center">
+                        <a href="{{ tool.url }}" target="_blank" rel="noopener noreferrer"
+                            class="text-[10px] font-label text-primary uppercase tracking-tighter hover:text-primary-container transition-colors">
+                            Ir a Herramienta
+                        </a>
+                        <a href="{{ tool.url }}" target="_blank" rel="noopener noreferrer"
+                            class="p-2 hover:bg-surface-container-highest rounded-lg transition-colors">
+                            <span class="material-symbols-outlined text-sm">open_in_new</span>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="col-span-full flex flex-col items-center justify-center py-12">
+                    <span class="material-symbols-outlined text-4xl text-on-surface-variant mb-4">folder_open</span>
+                    <p class="text-on-surface-variant text-lg">No hay herramientas disponibles en esta categoría.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+</div>
 
 {% endblock %}

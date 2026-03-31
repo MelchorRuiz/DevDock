@@ -11,10 +11,12 @@ class Config:
 class DevelopmentConfig(Config):
     """Development configuration."""
     DEBUG = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///devdock.db'
     
 class ProductionConfig(Config):
     """Production configuration."""
     DEBUG = False
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
     
 # Dictionary to hold the different configurations
 config = {
