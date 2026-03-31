@@ -59,3 +59,7 @@
   --color-on-secondary-fixed: #4f0089;
   --color-on-secondary-container: #e9cdff;
 }
+
+html {
+  scrollbar-gutter: stable;
+}
