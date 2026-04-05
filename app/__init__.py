@@ -26,6 +26,8 @@ def create_app():
     app.register_blueprint(saved_bp, url_prefix='/saved')
     from app.routes.suggest import suggest_bp
     app.register_blueprint(suggest_bp, url_prefix='/suggest')
+    from app.routes.mcp import mcp_bp
+    app.register_blueprint(mcp_bp, url_prefix='/mcp')
     
     @app.errorhandler(404)
     def page_not_found(e):

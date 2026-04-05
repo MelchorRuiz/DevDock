@@ -35,6 +35,10 @@
                     class=" bg-primary hover:bg-primary-dim text-on-primary-container px-10 py-4 rounded-xl font-label font-bold text-lg shadow-[0_0_30px_rgba(129,236,255,0.3)] transition-all">
                     Accede al Dashboard
                 </a>
+                <button onclick="document.getElementById('mcp-integration').scrollIntoView({ behavior: 'smooth' })"
+                    class=" bg-purple-400 hover:bg-purple-500 text-black/80 px-10 py-4 rounded-xl font-label font-bold text-lg shadow-[0_0_30px_rgba(129,236,255,0.3)] transition-all cursor-pointer">
+                    Intregración con MCP
+                </button>
             </div>
             <!-- Bento Grid App Mockup -->
             <div
@@ -137,7 +141,7 @@
                     <h4 class="text-2xl font-headline font-bold mb-4">Scraping Automatizado</h4>
                     <p class="text-on-surface-variant leading-relaxed">
                         Copia una URL y DevDock extraerá su contenido mediante scraping y usa IA para decidir si cumplen
-                        con los estándares de calidad antes de añadirlos a nuestra biblioteca. 
+                        con los estándares de calidad antes de añadirlos a nuestra biblioteca.
                     </p>
                 </div>
             </div>
@@ -182,6 +186,101 @@
                         src="{{ url_for('static', filename='images/comparison.png') }}" />
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- MCP Integration Section -->
+    <section class="py-32 px-6" id="mcp-integration">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="flex flex-col">
+                    <div class="mb-4">
+                        <h3 class="text-4xl md:text-6xl font-headline font-bold tracking-tight">
+                            Integración Universal con MCP
+                        </h3>
+                        <p class="text-on-surface-variant font-body my-2">
+                            Accede a DevDock desde cualquier cliente compatible con el protocolo Model Context Protocol (MCP):
+                            VS Code, Claude, Cursor, y más herramientas de IA que lo soportan.
+                        </p>
+                    </div>
+
+                    <!-- Features Card -->
+                    <div class="p-8 rounded-4xl bg-surface-container border border-outline-variant/10 flex-1">
+                        <div class="size-12 rounded-xl bg-secondary/10 flex items-center justify-center mb-6">
+                            <span class="material-symbols-outlined text-secondary">extension</span>
+                        </div>
+                        <h4 class="text-2xl font-headline font-bold mb-6">Beneficios</h4>
+                        <ul class="space-y-4">
+                            <li class="flex gap-3">
+                                <span class="text-primary font-bold mt-0.5">✓</span>
+                                <div>
+                                    <p class="text-sm font-semibold text-on-surface">Acceso multiplataforma</p>
+                                    <p class="text-xs text-on-surface-variant">Usa cualquier cliente MCP: VS Code, Claude,
+                                        Cursor, etc.</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="text-primary font-bold mt-0.5">✓</span>
+                                <div>
+                                    <p class="text-sm font-semibold text-on-surface">Integración con IA</p>
+                                    <p class="text-xs text-on-surface-variant">Accede a herramientas directamente desde tus
+                                        asistentes de IA</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="text-primary font-bold mt-0.5">✓</span>
+                                <div>
+                                    <p class="text-sm font-semibold text-on-surface">Protocolo abierto</p>
+                                    <p class="text-xs text-on-surface-variant">Compatible con cualquier cliente que
+                                        implemente el estándar MCP</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Configuration Card -->
+                <div class="p-8 rounded-4xl bg-surface-container border border-outline-variant/10">
+                    <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
+                        <span class="material-symbols-outlined text-primary">settings</span>
+                    </div>
+                    <h4 class="text-2xl font-headline font-bold mb-6">Cómo configurar</h4>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-sm font-semibold text-on-surface mb-3">Para VS Code:</p>
+                            <p class="text-xs text-on-surface-variant mb-2">Abre tu archivo de configuración en:</p>
+                            <p class="text-xs text-on-surface-variant"><code
+                                    class="bg-surface-container-lowest px-2 py-1 rounded text-xs">.vscode/mcp.json</code>
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-on-surface mb-2">Para Cursor, Claude y otras
+                                herramientas:</p>
+                            <p class="text-xs text-on-surface-variant mb-3">Consulta la documentación de tu cliente para
+                                la ubicación de configuración MCP</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-on-surface mb-2">2. Agrega este servidor MCP:</p>
+                            <div class="bg-surface-container-lowest rounded-lg p-4 overflow-x-auto w-80 lg:w-full">
+                                <pre class="text-xs font-mono text-primary"><code>{
+    "servers": {
+        "DevDock": {
+            "url": "https://devdock.melchor-ruiz.dev/mcp",
+            "type": "http"
+        }
+    }
+}</code></pre>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-on-surface mb-2">3. Recarga tu cliente</p>
+                            <p class="text-xs text-on-surface-variant">El servidor MCP estará disponible en tu
+                                herramienta. Reinicia tu cliente para que detecte la nueva configuración.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
     </section>
 </main>

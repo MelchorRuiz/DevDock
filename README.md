@@ -8,7 +8,24 @@
 DevDock es una biblioteca web de herramientas para desarrolladores que combina catálogo por categorías, búsqueda semántica con IA y un flujo de sugerencias asistido por scraping e inteligencia artificial. La app permite descubrir herramientas técnicas, revisar detalles de cada recurso y guardar favoritos en el navegador. Además, incluye un proceso de revisión de nuevas URLs sugeridas por los propios usuarios mediante scraping e inteligencia artificial para validar si realmente aportan valor al ecosistema de desarrollo.
 
 ## Demo
+Accede a DevDock desde tu navegador.
 [devdock.melchor-ruiz.dev](https://devdock.melchor-ruiz.dev)
+
+## Integración MCP
+Accede a DevDock desde cualquier cliente compatible con Model Context Protocol (MCP): VS Code, Claude, Cursor y más.
+
+**Configuración:**
+```json
+{
+  "servers": {
+    "DevDock": {
+      "url": "https://devdock.melchor-ruiz.dev/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
 
 ## Capturas de pantalla
 
