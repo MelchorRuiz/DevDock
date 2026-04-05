@@ -209,7 +209,7 @@ def review():
                     "analysis": analysis_payload.get("analysis") or {},
                 }
             )
-        elif previous_suggestion.status == "rejected":
+        else:
             return jsonify(
                 {
                     "error": "url_already_validated",
