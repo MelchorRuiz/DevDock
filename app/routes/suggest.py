@@ -15,7 +15,7 @@ suggest_bp = Blueprint('suggest', __name__)
 
 SCRAPE_TEXT_LIMIT = 1200
 SCRAPE_HTML_LIMIT = 200000
-SCRAPE_TIMEOUT = 10
+SCRAPE_TIMEOUT = 20
 
 
 def _normalize_string(value):
@@ -85,6 +85,13 @@ def _scrape_url(url):
         )
         response.raise_for_status()
         html_text = response.text or ""
+    except requests.exceptions.Timeout:
+        return {
+            "title": "",
+            "description": "",
+            "h1": "",
+            "text": "",
+        }
     except Exception:
         return {
             "title": "",
@@ -202,7 +209,7 @@ def review():
                     "analysis": analysis_payload.get("analysis") or {},
                 }
             )
-        else:
+        elif previous_suggestion.status == "rejected":
             return jsonify(
                 {
                     "error": "url_already_validated",
