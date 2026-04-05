@@ -144,7 +144,6 @@ def rerank_tools(query, tools):
             model="gemini-3-flash-preview",
             messages=[{"role": "user", "content": prompt}]
         )
-        print(f"Raw reranking response for query: '{query}': {completion.choices[0].message.content}")  # Debug log
         ordered_ids = _extract_json_array(completion.choices[0].message.content)
         ordered_ids = [int(tool_id) for tool_id in ordered_ids if str(tool_id).isdigit()]
     except Exception:
@@ -183,7 +182,6 @@ def analyze_suggested_tool(url, scraped_data, categories):
             model="gemini-3-flash-preview",
             messages=[{"role": "user", "content": prompt}]
         )
-        print(f"Raw analysis response for URL: {url}: {completion.choices[0].message.content}")  # Debug log
         return _extract_json_object(completion.choices[0].message.content)
     except Exception as e:
         print(f"Error analyzing suggested tool for URL: {url}: {e}")

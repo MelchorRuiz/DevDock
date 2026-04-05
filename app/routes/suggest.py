@@ -3,10 +3,10 @@ import re
 import html as html_lib
 import unicodedata
 from urllib.parse import urlparse
-
+from url_normalize import url_normalize
+import validators
 import requests
 from flask import Blueprint, jsonify, render_template, request
-
 from app import db
 from app.ai import analyze_suggested_tool
 from app.models import Category, Suggestion, Tag, Tool
@@ -78,9 +78,10 @@ def _scrape_url(url):
             url,
             timeout=SCRAPE_TIMEOUT,
             headers={
-                "User-Agent": "DevDockBot/1.0 (+https://devdock.local)",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
                 "Accept-Language": "es-ES,es;q=0.9,en;q=0.8",
             },
+            allow_redirects=True,
         )
         response.raise_for_status()
         html_text = response.text or ""
@@ -178,55 +179,50 @@ def review():
 
     if not url:
         return jsonify({"error": "url_required"}), 400
-
-    parsed = urlparse(url)
-    if parsed.scheme not in ("http", "https") or not parsed.netloc:
+    
+    normalized = url_normalize(url, default_scheme="https")
+    
+    if not validators.url(normalized):
         return jsonify({"error": "invalid_url"}), 400
 
-    if Tool.query.filter_by(url=url).first():
+    if Tool.query.filter_by(url=normalized).first():
         return jsonify({"error": "tool_already_exists"}), 409
 
-    approved_suggestion = (
-        Suggestion.query.filter_by(raw_url=url, status="approved")
-        .order_by(Suggestion.created_at.desc())
-        .first()
-    )
-    if approved_suggestion:
-        try:
-            analysis_payload = json.loads(approved_suggestion.ai_analysis or "{}")
-        except json.JSONDecodeError:
-            analysis_payload = {}
-
-        return jsonify(
-            {
-                "suggestion_id": approved_suggestion.id,
-                "status": "approved",
-                "analysis": analysis_payload.get("analysis") or {},
-            }
-        )
-
-    previous_suggestion = Suggestion.query.filter_by(raw_url=url).order_by(Suggestion.created_at.desc()).first()
+    previous_suggestion = Suggestion.query.filter_by(raw_url=normalized).order_by(Suggestion.created_at.desc()).first()
     if previous_suggestion:
-        return jsonify(
-            {
-                "error": "url_already_validated",
-                "status": previous_suggestion.status,
-            }
-        ), 409
+        if previous_suggestion.status == "approved":
+            try:
+                analysis_payload = json.loads(previous_suggestion.ai_analysis or "{}")
+            except json.JSONDecodeError:
+                analysis_payload = {}
+            return jsonify(
+                {
+                    "suggestion_id": previous_suggestion.id,
+                    "status": "approved",
+                    "analysis": analysis_payload.get("analysis") or {},
+                }
+            )
+        else:
+            return jsonify(
+                {
+                    "error": "url_already_validated",
+                    "status": previous_suggestion.status,
+                }
+            ), 409
 
     try:
         suggestion = Suggestion(
-            raw_url=url,
+            raw_url=normalized,
             suggested_by=_get_client_ip(),
             status="pending",
         )
         db.session.add(suggestion)
         db.session.commit()
 
-        scraped = _scrape_url(url)
+        scraped = _scrape_url(normalized)
         categories = Category.query.order_by(Category.name).all()
         category_names = [category.name for category in categories]
-        analysis = analyze_suggested_tool(url, scraped, category_names)
+        analysis = analyze_suggested_tool(normalized, scraped, category_names)
         analysis = analysis if isinstance(analysis, dict) else {}
 
         has_name = bool((analysis.get("name") or "").strip())

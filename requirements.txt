@@ -32,5 +32,7 @@ SQLAlchemy==2.0.48
 tqdm==4.67.3
 typing-inspection==0.4.2
 typing_extensions==4.15.0
+url-normalize==2.2.1
 urllib3==2.6.3
+validators==0.35.0
 Werkzeug==3.1.7

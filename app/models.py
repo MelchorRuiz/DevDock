@@ -48,7 +48,7 @@ class Tool(db.Model):
             self.embedding = json.dumps(embedding_vector)
             return True
         except Exception as e:
-            print(f"Error generando embedding para {self.name}: {str(e)}")
+            print(f"Error generating embedding for {self.name}: {str(e)}")
             return False
     
     
