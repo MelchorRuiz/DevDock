@@ -3,6 +3,9 @@ import math
 import json
 from openai import OpenAI
 
+EMBEDDING_MODEL = "perplexity/pplx-embed-v1-0.6b"
+TEXT_MODEL = "deepseek/deepseek-v3.2"
+
 # Usar API key desde variable de entorno
 api_key = os.getenv('OPENROUTER_API_KEY')
 if not api_key:
@@ -43,7 +46,7 @@ def _extract_json_object(text):
 
 def generate_embeddings(text):
     result = client.embeddings.create(
-        model="gemini-embedding-001",
+        model=EMBEDDING_MODEL,
         input=text
     )
     
@@ -141,7 +144,7 @@ def rerank_tools(query, tools):
 
     try:
         completion = client.chat.completions.create(
-            model="gemini-3-flash-preview",
+            model=TEXT_MODEL,
             messages=[{"role": "user", "content": prompt}]
         )
         ordered_ids = _extract_json_array(completion.choices[0].message.content)
@@ -179,7 +182,7 @@ def analyze_suggested_tool(url, scraped_data, categories):
 
     try:
         completion  = client.chat.completions.create(
-            model="gemini-3-flash-preview",
+            model=TEXT_MODEL,
             messages=[{"role": "user", "content": prompt}]
         )
         return _extract_json_object(completion.choices[0].message.content)
